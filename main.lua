@@ -666,11 +666,6 @@ UserInputService.JumpRequest:Connect(function()
 	end
 end)
 
--- Suicide
-LocalPlayerPage:addButton("Suicide", function()
-	LocalPlayer.Character:WaitForChild("Humanoid").Health = 0
-end)
-
 -- Fly
 local FlyButton = LocalPlayerPage:addToggle("Fly")
 local ctrl = { f = 0, b = 0, l = 0, r = 0 }
@@ -796,6 +791,11 @@ LocalPlayerPage:addButton("Fullbright", function()
 
 	dofullbright()
 	Light.LightingChanged:Connect(dofullbright)
+end)
+
+-- Suicide
+LocalPlayerPage:addButton("Suicide", function()
+	LocalPlayer.Character:WaitForChild("Humanoid").Health = 0
 end)
 
 -- Universal Page
@@ -2281,41 +2281,35 @@ if Drawing ~= nil then
 	end)
 end
 
--- Games List
-pcall(function()
-	local games = HttpService:JSONDecode(
-		game:HttpGet("https://raw.githubusercontent.com/Commandcracker/Magma-Hub/main/games.json")
-	)
-	local GamesPage = MagmaHub:addPage("Games")
+-- Slap Battles Page
+local UniversalPage = MagmaHub:addPage("Slap Battles")
 
-	for _, v in pairs(games) do
-		GamesPage:addButton(v.Name, function()
-			TeleportService:Teleport(v.RootPlace, LocalPlayer)
-		end)
+-- Control TP
+LocalPlayerPage:addButton("Control TP", function()
+	local UIS = game:GetService("UserInputService")
+ 
+	local Player = game.Players.LocalPlayer
+	local Mouse = Player:GetMouse()
+	
+	
+	function GetCharacter()
+	   return game.Players.LocalPlayer.Character
 	end
-end)
-
--- Other Games
-local successed, errData = pcall(function()
-	loadstring(
-		game:HttpGet("https://raw.githubusercontent.com/Commandcracker/Magma-Hub/main/games/" .. game.GameId .. ".lua")
-	)()
-end)
-
-if successed then
-	--[[
-        local GameInfo = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
-        print("Game: "..GameInfo.Name)
-    ]]
-	MagmaHub:Notify("Game Supported")
-elseif errData ~= nil then
-	if errData == "HTTP 404 (Not Found)" then
-		MagmaHub:Notify("Game Not Supported")
-	else
-		MagmaHub:Notify("Failed To load game scripts", 1)
-		warn(errData)
+	
+	function Teleport(pos)
+	   local Char = GetCharacter()
+	   if Char then
+		   Char:MoveTo(pos)
+	   end
 	end
-end
+	
+	
+	UIS.InputBegan:Connect(function(input)
+	   if input.UserInputType == Enum.UserInputType.MouseButton1 and UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+		   Teleport(Mouse.Hit.p)
+	   end
+	end)
+ end)
 
 -- Load
 MagmaHub:load()

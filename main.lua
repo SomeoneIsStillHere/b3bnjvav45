@@ -1,9 +1,3 @@
---[[
-    Magma Hub
-    © Commandcracker
-
-    https://github.com/Commandcracker/Magma-Hub
-]]
 
 -- Services
 local UserInputService = game:GetService("UserInputService")
@@ -31,15 +25,15 @@ if hookmetamethod ~= nil and getnamecallmethod ~= nil then
 			if n == nil then
 				game.StarterGui:SetCore(
 					"SendNotification",
-					{ Title = "Magma Hub", Text = "Kick prevented.", Duration = 2 }
+					{ Title = "Hx hub", Text = "Kick prevented.", Duration = 2 }
 				)
-				print("[Magma Hub] Kick prevented.")
+				print("[Hx Hub] Kick prevented.")
 			else
 				game.StarterGui:SetCore(
 					"SendNotification",
-					{ Title = "Magma Hub", Text = "Kick " .. '"' .. n .. '"' .. " prevented.", Duration = 2 }
+					{ Title = "Hx Hub", Text = "Kick " .. '"' .. n .. '"' .. " prevented.", Duration = 2 }
 				)
-				print("[Magma Hub] Kick " .. '"' .. n .. '"' .. " prevented.")
+				print("[Hx hub] Kick " .. '"' .. n .. '"' .. " prevented.")
 			end
 			return nil
 		end
@@ -238,14 +232,14 @@ function UIutil:DraggingEnabled(frame, parent)
 	end)
 end
 
--- Magma UI
-local MagmaUI = {}
+-- Hx UI
+local HxUI = {}
 local Page = {}
 
-MagmaUI.__index = MagmaUI
+HxUI.__index = HxUI
 Page.__index = Page
 
-function MagmaUI.new()
+function HxUI.new()
 	local GUI
 	if pcall(function()
 		return game.CoreGui.Name
@@ -268,7 +262,7 @@ function MagmaUI.new()
 	local RGBBar = Instance.new("Frame", MainFrame)
 	RGBBar.BorderSizePixel = 0
 	RGBBar.Size = UDim2.new(1, 0, 0, 4)
-	RGBBar.BackgroundColor3 = Color3.fromRGB(255, 78, 1)
+	RGBBar.BackgroundColor3 = Color3.fromRGB(0,0,205)
 	RGBBar.ZIndex = 2
 
 	--[[
@@ -292,7 +286,7 @@ function MagmaUI.new()
 	Title.Size = UDim2.new(0.5, 0, 1, 0)
 	Title.Position = UDim2.new(0, 10, 0, 0)
 	Title.Font = Enum.Font.GothamBold
-	Title.Text = "Magma Hub"
+	Title.Text = "Hx Hub"
 	Title.TextSize = 14
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.BackgroundTransparency = 1
@@ -316,7 +310,7 @@ function MagmaUI.new()
 		)
 		wait(1)
 		GUI:Destroy()
-		warn('[Magma Hub] Terminating Threads (ignore errors like "attempt to call a nil value")')
+		warn('[Hx Hub] Terminating Threads (ignore errors like "attempt to call a nil value")')
 		Threads:Cleanup()
 		script:Destroy()
 	end)
@@ -348,7 +342,7 @@ function MagmaUI.new()
 	return setmetatable({
 		MainFrame = MainFrame,
 		PageFrame = PageFrame,
-	}, MagmaUI)
+	}, HxUI)
 end
 
 function Page.new(lib, title: string)
@@ -550,7 +544,7 @@ function Page:addInput(title: string, Function)
 	return Button
 end
 
-function MagmaUI:addPage(title: string)
+function HxUI:addPage(title: string)
 	local page = Page.new(self, title)
 	page.Button.MouseButton1Click:Connect(function()
 		page:Show()
@@ -558,29 +552,29 @@ function MagmaUI:addPage(title: string)
 	return page
 end
 
-function MagmaUI:load()
+function HxUI:load()
 	UIutil:DraggingEnabled(self.MainFrame)
 	self.MainFrame:TweenPosition(UDim2.new(0.5, -250, 0.5, -196), Enum.EasingDirection.In, Enum.EasingStyle.Sine, 1)
 end
 
-function MagmaUI:Notify(text: string, mode: number)
+function HxUI:Notify(text: string, mode: number)
 	if mode == nil or mode == 0 then
-		print("[Magma Hub] " .. text)
+		print("[Hx Hub] " .. text)
 	elseif mode == 1 then
-		warn("[Magma Hub] " .. text)
+		warn("[Hx Hub] " .. text)
 	end
 	game.StarterGui:SetCore("SendNotification", {
-		Title = "Magma Hub",
+		Title = "Hx Hub",
 		Text = text,
 		Duration = 2,
 	})
 end
 
 -- Init
-MagmaHub = MagmaUI.new()
+HxHub = HxUI.new()
 
 -- Local Player Page
-local LocalPlayerPage = MagmaHub:addPage("Local Player")
+local LocalPlayerPage = HxHub:addPage("Local Player")
 LocalPlayerPage:Show()
 
 -- WalkSpeed
@@ -595,15 +589,13 @@ LocalPlayerPage:addInput("JumpPower", function(input)
 	Humanoid.JumpPower = input
 end)
 
--- Teleport To Player
-LocalPlayerPage:addInput("Teleport To Player", function(input)
-	for _, player in pairs(Players:GetPlayers()) do
-		if input == string.sub(player.Name, 1, #input) then
-			LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
-				+ Vector3.new(0, 0, -1)
-		end
-	end
-end)
+-- Teleport To Player   (Working  on)
+
+--[[LocalPlayerPage:addInput("Teleport To Player", function(input)
+		players = game:GetService("Players")
+		targetPlayer = players:FindFirstChild(input)
+		players.LocalPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+	end)]]
 
 -- Control TP
 LocalPlayerPage:addButton("Control TP", function()
@@ -799,7 +791,7 @@ LocalPlayerPage:addButton("Suicide", function()
 end)
 
 -- Universal Page
-local UniversalPage = MagmaHub:addPage("Universal")
+local UniversalPage = HxHub:addPage("Universal")
 
 -- Secure Dex
 UniversalPage:addButton("Secure Dark Dex V3", function()
@@ -811,14 +803,13 @@ UniversalPage:addButton("Secure Dark Dex V3", function()
 	)()
 end)
 
--- merge Magma Dex with Secure dex
--- Magma Dex
-UniversalPage:addButton("Magma Dex", function()
+-- Dex
+UniversalPage:addButton("Hx Dex", function()
 	local Dex = rawget(game:GetObjects("rbxassetid://8126316565"), 0X1)
 	if type(syn) == "table" and type(syn.protect_gui) == "function" then
 		xpcall(syn.protect_gui, warn, Dex)
 	end
-	Dex.Name, Dex.Parent = "Magma Dex", game:GetService("CoreGui")
+	Dex.Name, Dex.Parent = "Hx Dex", game:GetService("CoreGui")
 	local function Load(x)
 		if x:IsA("Script") then
 			xpcall(
@@ -936,7 +927,7 @@ LocalPlayer.Idled:Connect(function()
 	if AntiAFKButton:IsEnabeld() then
 		VirtualUser:CaptureController()
 		VirtualUser:ClickButton2(Vector2.new())
-		MagmaHub:Notify("Reflected idle Kick")
+		HxHub:Notify("Reflected idle Kick")
 	end
 end)
 
@@ -1310,7 +1301,7 @@ end)
 
 if Drawing ~= nil then
 	-- Visuals from https://github.com/Exunys
-	local Visuals = MagmaHub:addPage("Visuals")
+	local Visuals = HxHub:addPage("Visuals")
 
 	-- Tracers
 	Visuals:addButton("Tracers", function()
@@ -2282,10 +2273,10 @@ if Drawing ~= nil then
 end
 
 -- Slap Battles Page
-local UniversalPage = MagmaHub:addPage("Slap Battles")
+local SlapPage = HxHub:addPage("Slap Battles")
 
 -- Control TP
-LocalPlayerPage:addButton("Control TP", function()
+SlapPage:addButton("Control TP", function()
 	local UIS = game:GetService("UserInputService")
  
 	local Player = game.Players.LocalPlayer
@@ -2312,4 +2303,4 @@ LocalPlayerPage:addButton("Control TP", function()
  end)
 
 -- Load
-MagmaHub:load()
+HxHub:load()

@@ -589,13 +589,15 @@ LocalPlayerPage:addInput("JumpPower", function(input)
 	Humanoid.JumpPower = input
 end)
 
--- Teleport To Player   (Working  on)
-
---[[LocalPlayerPage:addInput("Teleport To Player", function(input)
-		players = game:GetService("Players")
-		targetPlayer = players:FindFirstChild(input)
-		players.LocalPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
-	end)]]
+-- Teleport To Player
+LocalPlayerPage:addInput("Teleport Player", function(input)
+	local targetPlayer = game.Players:FindFirstChild(input)
+	if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+		LocalPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+	else
+		print("Player not found or invalid target player")
+	end
+end)
 
 -- Control TP
 LocalPlayerPage:addButton("Control TP", function()
@@ -2393,6 +2395,11 @@ end
 
 -- Slap Battles Page
 local SlapPage = HxHub:addPage("Slap Battles")
+
+
+-- slap battles hub
+SlapPage:addButton("Slap Battles Hub", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Giangplay/Slap_Battles/main/Slap_Battles.lua"))() end)
+
 
 -- Control TP
 SlapPage:addButton("Control TP", function()

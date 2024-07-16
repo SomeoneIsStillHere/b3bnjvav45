@@ -2422,7 +2422,7 @@ SlapPage:addButton("Control TP", function()
 end)
 
 -- Fly Plus
-LocalPlayerPage:addButton("Fly Plus", function()
+SlapPage:addButton("Fly Plus", function()
 	--// Flying script made by SomoneIsHere
 	--// to enable flying mode press 'Z'
 	--// to allow input from AWSD keys press 'X' and to stop in mid-air press 'X' to suspend the AWSD keys
@@ -2538,6 +2538,21 @@ LocalPlayerPage:addButton("Fly Plus", function()
 			ctrl.f = 0
 		end
 	end)
+end)
+
+SlapPage:addInput("Fly is recommended for the teleportation below", function(input)
+end)
+
+-- Teleport to the admin button 2 obby  (flying recommended)
+SlapPage:addButton("Admin obby TP", function()
+	local Character = game.Players.LocalPlayer.Character or workspace:WaitForChild(game.Players.LocalPlayer.Name)
+	Character:PivotTo(CFrame.new(-16967.78515625, 797.600341796875, 4906.6796875)) 
+end)
+
+-- Teleport to retro
+SlapPage:addButton("Retro TP", function()
+	local Character = game.Players.LocalPlayer.Character or workspace:WaitForChild(game.Players.LocalPlayer.Name)
+	Character:PivotTo(CFrame.new(-16967.78515625, 797.600341796875, 4906.6796875)) 
 end)
 
 -- Load

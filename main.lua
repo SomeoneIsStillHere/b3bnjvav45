@@ -658,8 +658,8 @@ UserInputService.JumpRequest:Connect(function()
 	end
 end)
 
--- Fly
-local FlyButton = LocalPlayerPage:addToggle("Fly")
+-- Fly Beta
+local FlyButton = LocalPlayerPage:addToggle("Fly Beta")
 local ctrl = { f = 0, b = 0, l = 0, r = 0 }
 local lastctrl = { f = 0, b = 0, l = 0, r = 0 }
 local maxspeed = 50
@@ -794,7 +794,7 @@ end)
 local UniversalPage = HxHub:addPage("Universal")
 
 -- Secure Dex
-UniversalPage:addButton("Secure Dark Dex V3", function()
+UniversalPage:addButton("Hx Dex V1", function()
 	loadstring(
 		game:HttpGet(
 			"https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua",
@@ -804,7 +804,7 @@ UniversalPage:addButton("Secure Dark Dex V3", function()
 end)
 
 -- Dex
-UniversalPage:addButton("Hx Dex", function()
+UniversalPage:addButton("Hx Dex V2", function()
 	local Dex = rawget(game:GetObjects("rbxassetid://8126316565"), 0X1)
 	if type(syn) == "table" and type(syn.protect_gui) == "function" then
 		xpcall(syn.protect_gui, warn, Dex)

@@ -766,6 +766,125 @@ FlyButton:SetEnableFunction(function()
 	Fly()
 end)
 
+-- Fly Plus
+LocalPlayerPage:addButton("Fly Plus", function()
+	--// Flying script made by SomoneIsHere
+	--// to enable flying mode press 'Z'
+	--// to allow input from AWSD keys press 'X' and to stop in mid-air press 'X' to suspend the AWSD keys
+	--// (more stable without shift lock)
+
+	--// Services
+	local UserInputService = game:GetService("UserInputService")
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+
+	--// Variables
+	local flying = false
+	local ctrl = {f = 0, b = 0, l = 0, r = 0}
+	local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+	local maxspeed = 1000
+	local speed = 50
+	local movementPaused = false  -- New variable to control movement pause
+
+	--// Main Function to Enable Flying
+	function Fly()
+		local plr = Players.LocalPlayer
+		repeat wait() until plr and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Humanoid")
+		local torso = plr.Character.HumanoidRootPart
+		local bg = Instance.new("BodyGyro", torso)
+		bg.P = 9e4
+		bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+		bg.cframe = torso.CFrame
+		local bv = Instance.new("BodyVelocity", torso)
+		bv.velocity = Vector3.new(0,0.1,0)
+		bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+		repeat wait()
+			plr.Character.Humanoid.PlatformStand = true
+			if not movementPaused then
+				if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+					speed = speed + 0.5 + (speed / maxspeed)
+					if speed > maxspeed then
+						speed = maxspeed
+					end
+				elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
+					speed = speed - 1
+					if speed < 0 then
+						speed = 0
+					else
+						speed = 50
+					end
+				end
+				if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+					bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f + ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * 0.2, 0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p)) * speed
+					lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+				elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
+					bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f + lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l + lastctrl.r, (lastctrl.f + lastctrl.b) * 0.2, 0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p)) * speed
+				else
+					bv.velocity = Vector3.new(0,0.1,0)
+				end
+				bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f + ctrl.b) * 50 * speed / maxspeed), 0, 0)
+			else
+				bv.velocity = Vector3.new(0,0.1,0)
+			end
+		until not flying
+		ctrl = {f = 0, b = 0, l = 0, r = 0}
+		lastctrl = {f = 0, b = 0, l = 0, r = 0}
+		bg:Destroy()
+		bv:Destroy()
+		plr.Character.Humanoid.PlatformStand = false
+		speed = 50
+	end
+
+	--// Input Handling
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		if gameProcessed then return end
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			if input.KeyCode == Enum.KeyCode.Z then  -- Change to Z key
+				if not flying then
+					flying = true
+					Fly()
+				else
+					flying = false
+					movementPaused = true  -- Pause movement
+				end
+			elseif input.KeyCode == Enum.KeyCode.X then  -- New key to toggle movement pause
+				movementPaused = not movementPaused  -- Toggle movement pause
+			elseif input.KeyCode == Enum.KeyCode.W then
+				ctrl.f = 1
+			elseif input.KeyCode == Enum.KeyCode.S then
+				ctrl.b = -1
+			elseif input.KeyCode == Enum.KeyCode.A then
+				ctrl.l = -1
+			elseif input.KeyCode == Enum.KeyCode.D then
+				ctrl.r = 1
+			end
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			if input.KeyCode == Enum.KeyCode.W then
+				ctrl.f = 0
+			elseif input.KeyCode == Enum.KeyCode.S then
+				ctrl.b = 0
+			elseif input.KeyCode == Enum.KeyCode.A then
+				ctrl.l = 0
+			elseif input.KeyCode == Enum.KeyCode.D then
+				ctrl.r = 0
+			end
+		end
+	end)
+
+	--// Automatically start flying if character is running
+	Players.LocalPlayer.Character.Humanoid.StateChanged:Connect(function(oldState, newState)
+		if newState == Enum.HumanoidStateType.Running then
+			ctrl.f = 1
+		else
+			ctrl.f = 0
+		end
+	end)
+end)
+
 -- Fullbright
 LocalPlayerPage:addButton("Fullbright", function()
 	local Light = game:GetService("Lighting")
